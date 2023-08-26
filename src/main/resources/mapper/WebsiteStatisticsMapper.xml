@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="plus.axz.community.mapper.WebsiteStatisticsMapper">
+    <!--求总数-->
+    <select id="countComment" parameterType="plus.axz.community.dto.StatisticsDto" resultType="java.lang.String">
+        select count(*) from comment where is_deleted = 0
+    </select>
+    <select id="countQuestion" parameterType="plus.axz.community.dto.StatisticsDto" resultType="java.lang.String">
+        select count(*) from question where is_deleted = 0
+    </select>
+    <select id="countUser" parameterType="plus.axz.community.dto.StatisticsDto" resultType="java.lang.String">
+        select count(*) from `user` where is_deleted = 0
+    </select>
+    <select id="countSorts" parameterType="plus.axz.community.dto.StatisticsDto" resultType="java.lang.String">
+        select count(*) from `sorts`
+    </select>
+    <select id="countTags" parameterType="plus.axz.community.dto.StatisticsDto" resultType="java.lang.String">
+        select count(*) from `tags`
+    </select>
+
+    <!--求今日新增数-->
+    <select id="countTodayComment" parameterType="plus.axz.community.dto.StatisticsDto" resultType="java.lang.String">
+        select count(*) from comment where is_deleted = 0 and gmt_create >= #{todayTime}
+    </select>
+    <select id="countTodayQuestion" parameterType="plus.axz.community.dto.StatisticsDto" resultType="java.lang.String">
+        select count(*) from question where is_deleted = 0 and gmt_create >= #{todayTime}
+    </select>
+    <select id="countTodayUser" parameterType="plus.axz.community.dto.StatisticsDto" resultType="java.lang.String">
+        select count(*) from `user` where is_deleted = 0 and gmt_create >= #{todayTime}
+    </select>
+    <select id="countTodaySorts" parameterType="plus.axz.community.dto.StatisticsDto" resultType="java.lang.String">
+        select count(*) from `sorts` WHERE gmt_create >= #{todayTime}
+    </select>
+    <select id="countTodayTags" parameterType="plus.axz.community.dto.StatisticsDto" resultType="java.lang.String">
+        select count(*) from `tags` WHERE gmt_create >= #{todayTime}
+    </select>
+
+</mapper>

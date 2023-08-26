@@ -1,0 +1,177 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>程序员论坛</title>
+    <head th:replace="fragment/import::common"></head>
+</head>
+<body>
+<!--顶部导航栏-->
+<div th:replace="fragment/top_navigation::nav"></div>
+<div class="container-fluid main">
+    <div class="row">
+        <div class="page_left col-lg-9 col-md-9 col-sm-12 col-xs-12">
+            <h3>
+                <img src="/icons/home.svg" class="nav-title-icon">
+                &nbsp;首页
+            </h3>
+            <div>
+                <ul class="nav nav-tabs">
+                    <li role="presentation" th:class="${sortType == null || sortType == 'new' ? 'active' : ''}">
+                        <a href="/?sort=new">
+                            <img src="/icons/all.svg" class="nav-title-icon">
+                            全部
+                        </a>
+                    </li>
+                    <li role="presentation" th:class="${sortType == 'no' ? 'active' : ''}">
+                        <a href="/?sort=no" class="red">
+                            <img src="/icons/newest.svg" class="nav-title-icon">
+                            最新发布
+                        </a>
+                    </li>
+                    <li role="presentation" th:class="${sortType == 'hot7' ? 'active' : ''}">
+                        <a href="/?sort=hot7">
+                            <img src="/icons/hebdomad.svg" class="nav-title-icon">
+                            一周内
+                        </a>
+                    </li>
+                    <li role="presentation" th:class="${sortType == 'hot30' ? 'active' : ''}">
+                        <a href="/?sort=hot30">
+                            <img src="/icons/month30.svg" class="nav-title-icon">
+                            一月内
+                        </a>
+                    </li>
+                    <li role="presentation" th:class="${sortType == 'hot' ? 'active' : ''}">
+                        <a href="/?sort=hot">
+                            <img src="/icons/history.svg" class="nav-title-icon">
+                            历史热点
+                        </a>
+                    </li>
+                </ul>
+            </div>
+            <!--问题列表-->
+            <div th:replace="fragment/question_list::list(false)"></div>
+            <!--分页栏-->
+            <div th:replace="fragment/page_navigation::nav"></div>
+        </div>
+        <div class="page_right col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <!--<h4>
+                <img src="/icons/images.svg" class="nav-title-icon">
+                每日一图
+            </h4>
+            <div class="row one-day-module">
+                <div class="col-sm-12 col-md-12">
+                    <div class="thumbnail">
+                        <img id="one-day-img">
+                        <div class="caption">
+                            <p><img src="/icons/calendar.svg">
+                            <p class="question_text" id="one-day-time"></p></p>
+                            <p id="one-day-text-cn"></p>
+                            </p>
+                        </div>
+                    </div>
+                </div>
+            </div>-->
+            <h4>
+                <img src="/icons/books.svg" class="nav-title-icon">
+                今日诗词
+            </h4>
+            <!--<div class="panel panel-warning">
+                <div class="panel-heading article-tag">-->
+            <div class="poetry-s">
+                <div class="panel-heading article-tag">
+                    <!--                    <span id="jinrishici-sentence">正在加载今日诗词....</span>-->
+                    <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+                    <script type="text/javascript">
+                        jinrishici.load(function (result) {
+                            var sentence = document.querySelector("#poem_sentence")
+                            var info = document.querySelector("#poem_info")
+                            sentence.innerHTML = result.data.content
+                            info.innerHTML = '【' + result.data.origin.dynasty + '】' + result.data.origin.author + '《' + result.data.origin.title + '》'
+                        });
+                    </script>
+                    <div id="poem_sentence"></div>
+                    <div id="poem_info"></div>
+                </div>
+            </div>
+            <hr>
+            <h4>
+                <img src="/icons/hotTag.svg" class="nav-title-icon">
+                热门标签
+            </h4>
+            <div class="hot-tag-list">
+                <span class="tag-style" th:each="tag : ${hotTags}">
+                    <a th:href="@{/(tag=${tag})}">
+                        <img src="/icons/tags.svg" class="nav-statistics-icon">
+                        <span th:text="${tag}"></span>
+                    </a>
+                </span>
+            </div>
+            <hr>
+            <div class="article-tag">
+                <iframe scrolling="no" src="https://tianqiapi.com/api.php?style=tp&skin=pitaya" frameborder="0"
+                        width="160" height="260" allowtransparency="true"></iframe>
+            </div>
+            <hr>
+            <h4>
+                <img src="/icons/total.svg" class="nav-title-icon">
+                网站统计
+            </h4>
+            <div class="statistics-list article-tag">
+                <span class="statistics">
+                    <img src="/icons/comment-icon.svg" class="nav-statistics-icon">
+                    <!--<span class="glyphicon glyphicon-comment"></span>-->
+                    总评论数：<span class="statistics-1" th:text="${countComment}"></span> 条
+                </span>
+                <br>
+                <span class="statistics">
+                    <img src="/icons/issue-icon.svg" class="nav-statistics-icon">
+                    <!--<span class="glyphicon glyphicon-question-sign"></span>-->
+                    总问题数：<span class="statistics-1" th:text="${countQuestion}"></span> 个
+                </span>
+                <br>
+                <span class="statistics">
+                    <img src="/icons/user-icon.svg" class="nav-statistics-icon">
+                    <!--<span class="glyphicon glyphicon-user"></span>-->
+                    总用户数：<span class="statistics-1" th:text="${countUser}"></span> 人
+                </span>
+                <br>
+                <span class="statistics">
+                    <img src="/icons/countSorts.svg" class="nav-statistics-icon">
+                    <!--<span class="glyphicon glyphicon-user"></span>-->
+                    总类别数：<span class="statistics-1" th:text="${countSorts}"></span> 种
+                </span>
+                <br>
+                <span class="statistics">
+                    <img src="/icons/countTags.svg" class="nav-statistics-icon">
+                    <!--<span class="glyphicon glyphicon-user"></span>-->
+                    总标签数：<span class="statistics-1" th:text="${countTags}"></span> 个
+                </span>
+            </div>
+            <hr>
+            <!--<h4>
+                <img src="/icons/rooter.svg" class="nav-title-icon">
+                联系站长
+            </h4>
+            <div class="connect-webMaster">
+                <img src="/images/connectme.png" class="img-thumbnail img-wecat">
+            </div>-->
+        </div>
+    </div>
+</div>
+<div>
+    <span class="glyphicon glyphicon-menu-up click-top-btn" id="returnTop"></span>
+</div>
+<!--每日模态框-->
+<div th:replace="fragment/article::article"></div>
+<!--顶部须知 模态框-->
+<div th:replace="fragment/notice::modal"></div>
+<!--聊天室-->
+<div th:replace="fragment/chatroom::chatroom"></div>
+<!--音乐播放器-->
+<div th:replace="fragment/music_player::musicPlyer"></div>
+<div></div>
+<!--页尾-->
+<div th:replace="fragment/footer::beetle_footer"></div>
+</body>
+</html>

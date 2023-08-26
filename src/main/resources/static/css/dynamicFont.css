@@ -1,0 +1,33 @@
+.dynamicFont {
+    background: #a9aeb8 -webkit-linear-gradient(left, #3491FA, #14C9C9 50%, #4080FF 90%, #F99057) no-repeat 0 0;
+    background-size: 20% 100%;
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    font-size: 12px;
+    text-align: center;
+    font-weight: bold;
+    text-decoration: underline;
+}
+
+.dynamicFont {
+    -webkit-animation: dynamicFont 10s linear infinite;
+    animation: dynamicFont 10s linear infinite;
+}
+
+@-webkit-keyframes dynamicFont {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}
+
+@keyframes dynamicFont {
+    0% {
+        background-position: 0 0;
+    }
+    100% {
+        background-position: 100% 100%;
+    }
+}

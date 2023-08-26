@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>程序员论坛</title>
+    <head th:replace="fragment/import::common"></head>
+</head>
+<body>
+<!--顶部导航栏-->
+<div th:replace="fragment/top_navigation::nav"></div>
+<div class="userInfo-home">
+    <span class="userInfo-home-1">
+        <img src="/icons/AboutMe.svg" class="nav-statistics-icon">修改资料</span>
+    <div class="userInfo-home-form">
+        <div>
+            <img th:src="@{${avatarUrl}}" alt="图片" style="height: 95px; width: 95px;">
+            <script src="http://malsup.github.io/jquery.form.js"></script>
+            <form action="http://localhost:221/uploads" method="post" enctype="multipart/form-data">
+                <!-- 检验图片类型 accept="image/gif,image/jpeg,image/jpg,image/png,image/svg">-->
+                <input type="file" name="file" value="上传图" accept="image/*">
+                <!--[[${avatarUrl}]]-->
+                <label for="bio" style="display:none;">
+                    <input class="form-control" th:value="${bio == null ? '' : bio}" name="bio">
+                </label>
+                <br>
+                <input type="submit" value="上传" class="btn btn-success">
+            </form>
+        </div>
+        <br>
+        <br>
+        <br>
+        <!--<a th:href="@{/userInfo}"><a th:href="@{/user/{id}(id=${session.user.id})}">修改资料</a></a>-->
+        <form class="userInfo-form" action="/user/update" method="post"
+              data-validator-option="{theme:'yellow_right_effect', stopOnError:true}">
+            <div class="form-group" style="display:none;">
+                <label for="id">
+                    <img src="/icons/envelope-open.svg" class="login-icon">&nbsp;ID：
+                    <input class="form-control" id="id" name="id" th:value="${session.user.id}">
+                </label>
+            </div>
+            <div class="form-group" style="display:none;">
+                <img src="/icons/envelope-open.svg" class="login-icon">&nbsp;名称：<b class="form-control-static"
+                                                                                     th:text="${name}"></b>
+            </div>
+            <div class="form-group">
+                <label for="avatarUrl">
+                    <!--<label for="avatarUrl" class="control-label"> 选择头像
+                       &lt;!&ndash;<b th:text="${avatarUrl == null ? '' : avatarUrl}"></b>&ndash;&gt;
+                       <input type="file" class="file" id="avatarUrl">
+                   </label>-->
+                    <img src="/icons/HeadPortraits.svg" class="nav-statistics-icon">头像地址：
+                    <!--<b th:text="${avatarUrl == null ? '' : avatarUrl}"></b>-->
+                    <!--<img th:src="@{${avatarUrl}}" alt="图片" style="height: 95px; width: 95px">-->
+                    <br>
+                    <input type="url" style="width: 520px;height: 50px;" class="form-control" id="avatarUrl"
+                           th:value="${avatarUrl == null ? '' : avatarUrl}"
+                           name="avatarUrl" data-rule="头像地址: required; avatarUrl">
+                </label>
+            </div>
+            <!--<div class="form-group">
+                <label for="phone">
+                    <img src="/icons/envelope-open.svg" class="login-icon">&nbsp;手机号：
+                    <input class="form-control" id="phone" name="phone" th:value="${phone == null ? '' : phone}">
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="sex">
+                    <img src="/icons/envelope-open.svg" class="login-icon">&nbsp;<p>性别：
+                    <input class="form-control" type="radio" id="man" name="sex" checked th:value="${sex == null ? '' : sex}">男
+                    <input class="form-control" type="radio" id="girl" name="sex" th:value="${sex == null ? '' : sex}">女
+                </p>
+                </label>
+            </div>-->
+            <div class="form-group">
+                <label for="bio">
+
+                    <img src="/icons/Description.svg" class="nav-statistics-icon">描述：
+                    <span>还能输入<i style="color:red;font-style:normal;" id="My-verify"></i>个字</span>
+                    <!--<b th:text="${bio == null ? '' : bio}"></b>-->
+                    <br>
+                    <textarea style="width: 520px;" maxlength="100" class="form-control" id="bio" rows="3" name="bio"
+                              onkeyup="checkLength(this);"
+                              data-rule="描述: required; bio">[[${bio == null ? '' : bio}]]
+                    </textarea>
+                    <script>
+                        function checkLength(which) {
+                            let maxChars = 100;
+                            if (which.value.length > maxChars)
+                                which.value = which.value.substring(0, maxChars);
+                            const curr = maxChars - which.value.length;
+                            document.getElementById("My-verify").innerHTML = curr.toString();
+                        }
+                    </script>
+                </label>
+            </div>
+            <div style="margin-left: 470px; float:left;">
+                <button type="submit" class="btn btn-warning btn-publish">修改</button>
+            </div>
+        </form>
+
+
+        <!--<form class="userInfo-form" action="/user/update" method="post"
+              data-validator-option="{theme:'yellow_right_effect', stopOnError:true}">
+            <div class="form-group" style="display:none;">
+                <label for="id">
+                    <img src="/icons/envelope-open.svg" class="login-icon">&nbsp;ID：
+                    <input class="form-control" id="id" name="id" th:value="${session.user.id}">
+                </label>
+            </div>
+            <div class="form-group" style="display:none;">
+                <img src="/icons/envelope-open.svg" class="login-icon">&nbsp;名称：<b class="form-control-static"
+                                                                                     th:text="${name}"></b>
+            </div>
+            <div class="form-group">
+                <br>
+                <label th:for="${avatarUrl}" class="control-label">选择头像
+                    <div>
+                        <form action="/upload" method="post" enctype="multipart/form-data">
+                            &lt;!&ndash; 检验图片类型 accept="image/gif,image/jpeg,image/jpg,image/png,image/svg">&ndash;&gt;
+                            <input type="file" name="file" accept="image/*">
+                            <img th:src="@{${avatarUrl}}" alt="图片" style="height: 95px; width: 95px">
+                            <br>
+                            [[${avatarUrl}]]
+                            <br>
+                            <input type="submit" value="上传" class="btn btn-success">
+                        </form>
+                    </div>
+                    &lt;!&ndash;<form action="/upload" method="post" enctype="multipart/form-data">
+                        &lt;!&ndash; 检验图片类型 accept="image/gif,image/jpeg,image/jpg,image/png,image/svg">&ndash;&gt;
+                        <input type="file" name="avatarUrl" id="avatarUrl" accept="image/*"/>
+                        <input type="submit" class="btn btn-info" value="上传"/>
+                        &lt;!&ndash;<input type="submit" value="上传" class="btn btn-warning btn-publish"/>&ndash;&gt;
+                    </form>&ndash;&gt;
+                </label>
+            </div>
+            <div class="form-group">
+                <label for="bio">
+                    <img src="/icons/envelope-open.svg" class="login-icon">&nbsp;描述：<b
+                        th:text="${bio == null ? '' : bio}"></b>
+                    <input type="bio" class="form-control" id="bio" th:value="${bio == null ? '' : bio}"
+                           name="bio" data-rule="描述: required; bio">
+                </label>
+            </div>
+            <input type="submit" class="btn btn-success btn-publish" value="提交"/>
+        </form>-->
+    </div>
+</div>
+<div>
+    <span class="glyphicon glyphicon-menu-up click-top-btn" id="returnTop"></span>
+</div>
+<!--顶部须知 模态框-->
+<div th:replace="fragment/notice::modal"></div>
+<!--聊天室-->
+<div th:replace="fragment/chatroom::chatroom"></div>
+<!--音乐播放器-->
+<div th:replace="fragment/music_player::musicPlyer"></div>
+<!--页尾-->
+<div th:replace="fragment/footer::beetle_footer"></div>
+</body>
+<script type="text/javascript">
+    const cs = this.bio.toString().length.valueOf();
+    console.log("获取描述字数：" + cs)
+</script>
+</html>

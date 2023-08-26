@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+<span th:text="${badges}"></span>
+<div class="github-badge" v-for="(item,index) in badges" :key="index">
+    <a rel="external nofollow noopener" :href="item.url" target="_blank" :title="item.title">
+        <span class="badge-subject">{{ item.badgeName }}</span>
+        <span class="badge-value" :class="`bg-${item.color}`">{{ item.value }}</span>
+    </a>
+</div>
+<div th:fragment="beetle_footer" class="footer-word">
+    Copyright © 2023 · coisini.cn ·
+    <a href="http://www.beian.miit.gov.cn/">湘ICP备2023000000号</a> ·
+    All rights reserved
+    <script type="text/javascript" src="http://yijuzhan.com/api/word.php?m=js"></script>
+    <script>document.write("<div class=\"dynamicFont\"style=\"text-decoration:none;\">");
+    yiju(true);
+    document.write("</div>");</script>
+    <link rel="stylesheet" href="/css/dynamicFont.css">
+</div>
+</body>
+</html>

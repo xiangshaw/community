@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="plus.axz.community.mapper.QuestionQueryMapper">
+
+    <!--   Question映射plus.axz.community.model.Question    true自动映射-->
+    <resultMap id="QuestionMap" type="plus.axz.community.model.pojo.Question" autoMapping="true">
+    </resultMap>
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="selectPage">
+        q.id,u.`name`author,q.creator,q.title,q.description,q.tags,q.gmt_create,q.gmt_modified,q.comment_count,q.like_count,q.view_count,q.top,q.`status`,q.is_deleted
+    </sql>
+    <!--此处id是方法名称，要一一对应-->
+    <!--根据名称、标题或者内容模糊查询，，，大于等于开始时间、小于等于创建时间 -->
+    <select id="selectPage" resultMap="QuestionMap">
+        select <include refid="selectPage" />
+        from question q, `user` u
+        <where>
+            q.creator = u.id
+            <if test="vo.keyword != null and vo.keyword != ''">
+                and (name like CONCAT('%',#{vo.keyword},'%') or  title like CONCAT('%',#{vo.keyword},'%') or description like CONCAT('%',#{vo.keyword},'%'))
+            </if>
+            <if test="vo.gmtCreate != null and vo.gmtCreate != ''">
+                and q.gmt_create &gt;= #{vo.gmtCreate}
+            </if>
+            <if test="vo.gmtModified != null and vo.gmtModified != ''">
+                and q.gmt_modified &lt;= #{vo.gmtModified}
+            </if>
+            and q.is_deleted = 0
+        </where>
+        order by id desc
+    </select>
+
+</mapper>

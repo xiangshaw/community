@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="plus.axz.community.mapper.TagMapper">
+
+    <!--   RoleMap映射plus.axz.model.system.SysRole     true自动映射-->
+    <resultMap id="TagMap" type="plus.axz.community.model.pojo.Tag" autoMapping="true">
+            <id property="id" column="id"/>
+            <id property="sortId" column="sort_id"/>
+            <result property="tagName" column="tag_name"/>
+    </resultMap>
+
+    <!-- 用于select查询公用抽取的列 -->
+    <sql id="tagQuery">
+        id,sort_id,tag_name
+    </sql>
+    <!--不等于null且不为空则有内容   和 状态正常 数据-->
+    <select id="selectPages" resultMap="TagMap">
+        select <include refid="tagQuery" />
+        from tags
+        <where>
+            <if test="tagQueryVo.tagName != null and tagQueryVo.tagName != ''">
+                and tag_name like CONCAT('%',#{tagQueryVo.tagName},'%')
+            </if>
+        </where>
+        order by id desc
+    </select>
+
+    <resultMap id="SortTagMap" type="plus.axz.community.model.vo.SortTagVo" autoMapping="true">
+        <result property="tagName" column="tag_name"/>
+    </resultMap>
+    <select id="findBySortName" resultMap="SortTagMap">
+        SELECT tag_name
+        FROM tags t
+                 INNER JOIN sorts s
+                            ON (t.sort_id = s.id)
+                                AND s.sort_name = #{sortName}
+    </select>
+
+    <resultMap id="TagsMap" type="plus.axz.community.model.vo.SortTagVo" autoMapping="true">
+        <result property="tagName" column="tag_name"/>
+    </resultMap>
+    <select id="selectList" resultType="plus.axz.community.model.pojo.Tag" resultMap="TagsMap">
+        SELECT tag_name FROM tags
+    </select>
+
+</mapper>

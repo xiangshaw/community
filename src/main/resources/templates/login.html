@@ -1,0 +1,152 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>登录 - 程序员论坛</title>
+    <head th:replace="fragment/import::common"></head>
+</head>
+<body class="login-body">
+<div class="login-main">
+    <div class="login-page container-fluid">
+        <div class="row login-page-main">
+<!--            <div class="login-left col-lg-8 col-md-8 col-sm-8 col-xs-8">-->
+            <div class="login-home">
+                <div class="login-logo">
+                    <b><a class="logo" th:href="@{/}">程序员论坛</a></b>
+                </div>
+                <form class="login-form" action="/login" method="post"
+                      data-validator-option="{theme:'yellow_right_effect', stopOnError:true}">
+                    <div class="form-group">
+                        <label for="login-email">
+                            <img src="/icons/envelope-open-s.svg" class="login-icon">&nbsp;邮箱
+                        </label>
+                        <input type="email" class="form-control" id="login-email" placeholder="Email"
+                               name="email" data-rule="邮箱: required; email">
+                    </div>
+                    <div class="form-group">
+                        <label for="login-pwd">
+                            <img src="/icons/lock-s.svg" class="login-icon">&nbsp;密码
+                        </label>
+                        <input type="password" class="form-control" id="login-pwd" placeholder="Password"
+                               name="password" data-rule="密码:required;length(6~16)">
+                    </div>
+                    <div class="checkbox">
+                        <label>
+                            <input id="remember-me" type="checkbox">记住我
+                        </label>
+                        <a class="to-right a-no-line" data-toggle="modal" data-target="#forget-pwd"
+                           style="cursor:pointer;"><img src="/icons/forget-the-password.svg" class="login-icon">&nbsp;忘记密码？</a>
+                    </div>
+                    <div>
+                        <span class="red" th:text="${loginError}"></span>
+                        <span class="red" th:text="${updatePwdInfo}"></span>
+                        <button type="submit" class="btn btn-info btn-publish">登录</button>
+                    </div>
+                </form>
+                <br>
+                <br>
+                <hr>
+                <!--<div style="display:flex">-->
+                <div style="margin-left: 100px; display:flex">
+                   <!-- <a th:href="@{https://github.com/login/oauth/authorize(client_id=${@environment.getProperty('github.client_id')},redirect_uri=${@environment.getProperty('github.redirect_uri')},scope='user',state='githublogin')}"
+                       class="login-other">
+                        <img src="/images/github.svg" class="login-icon">
+                        Github登录
+                    </a>
+                    &nbsp;-->
+                    <a th:href="@{https://gitee.com/oauth/authorize(client_id=${@environment.getProperty('gitee.client_id')},redirect_uri=${@environment.getProperty('gitee.redirect_uri')},response_type='code',scope='user_info',state='giteelogin')}"
+                       class="login-other">
+                        <img src="/images/gitee-s.svg" class="login-icon">
+                        Gitee登录
+                    </a>
+                </div>
+            </div>
+            <!--<div class="login-right col-lg-4 col-md-4 col-sm-4 col-xs-4">
+                <div class="login-other-all">
+                    <h4>第三方账号登录</h4>
+&lt;!&ndash;                    <a th:href="@{https://github.com/login/oauth/authorize(client_id=${@environment.getProperty('github.client_id')},redirect_uri=${@environment.getProperty('github.redirect_uri')},scope='user',state='githublogin')}"&ndash;&gt;
+                    <a href="https://github.com/login/oauth/authorize?client_id=Iv1.c34ee2f5bf023647&redirect_uri=http://localhost:221/githubCallback&scope='user'&state='githublogin'"
+                       class="login-other">
+                        <img src="/images/github.svg" class="login-icon">
+                        Github登录
+                    </a>
+                    <a th:href="@{https://gitee.com/oauth/authorize(client_id=${@environment.getProperty('gitee.client_id')},redirect_uri=${@environment.getProperty('gitee.redirect_uri')},response_type='code',scope='user_info',state='giteelogin')}"
+                       class="login-other">
+                        <img src="/images/gitee.svg" class="login-icon">
+                        Gitee登录
+                    </a>
+                    <a th:href="@{https://graph.qq.com/oauth2.0/authorize(response_type='code',client_id=${@environment.getProperty('qq.client_id')},redirect_uri=${@environment.getProperty('qq.redirect_uri')},state='qqlogin')}"
+                       class="login-other">
+                        <img src="/images/QQ.svg" class="login-icon">
+                        QQ登录
+                    </a>
+                </div>
+            </div>-->
+        </div>
+        <div class="login-page-footer">
+            <!--<img src="/icons/info.svg" class="login-icon">&nbsp;-->
+            <img src="/icons/issue-icon.svg" class="nav-statistics-icon">&nbsp;
+            <b>还没有账号? <a href="/register">立即注册</a>&nbsp;或者&nbsp;<a href="/">以游客身份访问</a></b>
+        </div>
+    </div>
+</div>
+<!--忘记密码模态框-->
+<div class="modal fade" id="forget-pwd" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+                <h4 class="modal-title">
+                    <img src="/icons/clock-s.svg" class="nav-title-icon">
+                    找回密码
+                </h4>
+            </div>
+            <form action="/updatePwd" method="post"
+                  data-validator-option="{theme:'yellow_right_effect', stopOnError:true}">
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="find-email"><img src="/icons/envelope-open-s.svg" class="login-icon">&nbsp;我的邮箱</label>
+                        <input type="email" class="form-control" id="find-email" placeholder="Email"
+                               name="email" data-rule="邮箱: required; email">
+                    </div>
+                    <div class="form-group">
+                        <label for="find-code"><img src="/icons/verification-code.svg" class="login-icon">&nbsp;验证码
+                            <button id="send-email-btn" type="button" class="btn btn-success btn-xs send-email-btn"
+                                    onclick="sendFindEmail()">获取验证码
+                            </button>
+                        </label>
+                        <input type="text" class="form-control" id="find-code" placeholder="Verification Code"
+                               name="code"
+                               data-rule="验证码:required;length(6)">
+                    </div>
+                    <div class="form-group">
+                        <label for="find-pwd1"><img src="/icons/new-password.svg" class="login-icon">&nbsp;新的密码</label>
+                        <input type="password" class="form-control" id="find-pwd1" placeholder="Password"
+                               name="pwd1" data-rule="新的密码:required;length(6~16)">
+                    </div>
+                    <div class="form-group">
+                        <label for="find-pwd2"><img src="/icons/confirm-password.svg" class="login-icon">&nbsp;确认密码</label>
+                        <input type="password" class="form-control" id="find-pwd2" placeholder="Verify Password"
+                               name="pwd2" data-rule="确认密码:required; match(pwd1)">
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger" onclick="updatePwd()">确认修改</button>
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!--聊天室-->
+<div th:replace="fragment/chatroom::chatroom"></div>
+<!--页尾-->
+<div th:replace="fragment/footer::beetle_footer"></div>
+<script>
+    $(function () {
+        customTheme();
+    });
+</script>
+</body>
+</html>

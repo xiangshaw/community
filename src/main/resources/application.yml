@@ -1,0 +1,113 @@
+# 端口
+server:
+  port: 221
+  max-http-header-size: 1048576
+# 设置Mapper接口所对应的XML文件位置，如果你在Mapper接口中有自定义方法，需要进行该配置
+mybatis-plus:
+  configuration:
+    map-underscore-to-camel-case: true # 数据库下划线自动转驼峰标示关闭(为true，就简单粗暴的把下划线干掉了)
+    log-impl: org.apache.ibatis.logging.stdout.StdOutImpl # 控制台打印语句
+  mapper-locations: classpath*:mapper/*.xml,classpath*:mapper/*/*.xml
+  # 设置别名包扫描路径，通过该属性可以给包中的类注册别名
+  type-aliases-package: plus.axz.community.model
+spring:
+  # 禁用 Thymeleaf 模板缓存
+  thymeleaf:
+    cache: false
+  # 配置数据源信息
+  datasource:
+    url: jdbc:mysql://localhost:3307/my_community?useUnicode=true&characterEncoding=utf8&serverTimezone=UTC
+    username: root
+    password: 123456
+    driver-class-name: com.mysql.cj.jdbc.Driver
+  # 配置邮件
+  #发送邮件的账户
+  mail:
+    host: smtp.qq.com
+    username: QQ@foxmail.com
+    touser: QQ@foxmail.com
+    #授权码
+    password: *********gf
+    #编码
+    default-encoding: UTF-8
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+            required: true
+  # 配置 redis
+  redis:
+    # 指定数据库10
+    database: 10
+    host: 127.0.0.1
+    port: 6379
+    password:
+  cache:
+    type: redis
+    redis:
+      time-to-live: 3600000
+      use-key-prefix: true
+      cache-null-values: true
+
+# 开启 mybatis 驼峰标识
+mybatis:
+  configuration:
+    map-underscore-to-camel-case: true
+  mapper-locations: classpath:mapper/*.xml
+  type-aliases-package: plus.axz.community.mapper
+
+# GitHub登录需要的参数
+github:
+  client_id: *** # Github的client-id
+  client_secret: *** # Github的client-secret
+  redirect_uri: http://localhost:221/githubCallback # Github回调地址
+  token_uri: https://github.com/login/oauth/access_token
+  user_uri: https://api.github.com/user
+
+# Gitee登录需要的参数
+gitee:
+  client_id: *** # Gitee第三方应用id
+  client_secret: *** # Gitee第三方应用密码
+  redirect_uri: http://localhost:221/giteeCallback
+
+# QQ登录需要的参数
+qq:
+  client_id: *** # QQ第三方应用id
+  client_secret: *** # QQ第三方应用密码
+  redirect_uri: https://www.***.cn/oauth/login/qq
+
+# 阿里云图片上传需要的参数
+aliyun:
+  endpoint: *** # oss地址
+  accessKeyId: *** # 阿里云用户id
+  accessKeySecret: *** # 阿里云用户密码
+  bucketName: *** # Bucket名称
+
+# 日志配置
+logging:
+  file:
+    name: log/community.log
+    max-size: 200MB
+    max-history: 30
+  level:
+    plus.axz.community.mapper: debug
+    root: info
+
+xiao:
+  # 默认头像链接
+  defaultAvatar: https://pica.zhimg.com/80/v2-45ee22493e1fb440722469649180ec6f_720w.webp
+  # 发送者邮箱地址
+  senderEmail: QQ@foxmail.com
+  # 聊天室id，http://dashboard.daovoice.io 注册账号，根据官方说明获取 app_id
+  app_id: ***
+
+# 测试了文件上传
+file:
+  upload:
+    ip: http://localhost:221/
+    #静态资源对外暴露的访问路径
+    relative: /img/**
+    #静态资源实际存储路径
+    path: community/src/main/resources/files/

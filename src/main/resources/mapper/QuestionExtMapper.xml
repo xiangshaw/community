@@ -1,0 +1,101 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="plus.axz.community.mapper.QuestionExtMapper">
+    <resultMap id="BaseResultMap" type="plus.axz.community.model.pojo.Question">
+        <id column="id" jdbcType="BIGINT" property="id"/>
+        <result column="title" jdbcType="VARCHAR" property="title"/>
+        <result column="tags" jdbcType="VARCHAR" property="tags"/>
+        <result column="gmt_create" jdbcType="BIGINT" property="gmtCreate"/>
+        <result column="gmt_modified" jdbcType="BIGINT" property="gmtModified"/>
+        <result column="comment_count" jdbcType="INTEGER" property="commentCount"/>
+        <result column="like_count" jdbcType="INTEGER" property="likeCount"/>
+        <result column="view_count" jdbcType="INTEGER" property="viewCount"/>
+        <result column="creator" jdbcType="BIGINT" property="creator"/>
+    </resultMap>
+
+    <update id="addViewCount" parameterType="plus.axz.community.model.pojo.Question">
+        update question
+        <set>
+            <if test="viewCount != null">
+                view_count = view_count + #{viewCount,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+    </update>
+    <update id="addCommentCount" parameterType="plus.axz.community.model.pojo.Question">
+        update question
+        <set>
+            <if test="viewCount != null">
+                comment_count = comment_count + #{commentCount,jdbcType=INTEGER},
+            </if>
+        </set>
+        where id = #{id,jdbcType=BIGINT}
+        and is_deleted = 0
+    </update>
+
+    <select id="findByTagsREGEXP" parameterType="plus.axz.community.model.pojo.Question" resultMap="BaseResultMap">
+        select * from question
+        <where>
+            <if test="id != null">
+                and id != #{id}
+            </if>
+            <if test="tags != null and tags != ''">
+                and tags regexp #{tags}
+            </if>
+            and status = 0
+            and is_deleted = 0
+        </where>
+        order by gmt_create desc limit 20
+    </select>
+
+    <select id="countByCondition" parameterType="plus.axz.community.dto.QuestionQueryDto" resultType="java.lang.Integer">
+        select count(*) from question
+        <where>
+            <if test="creatorId != null and creatorId != ''">
+                and creator = #{creatorId}
+            </if>
+            <if test="search != null and search != ''">
+                and title regexp #{search}
+            </if>
+            <if test="tag != null and tag != ''">
+                and tags regexp #{tag}
+            </if>
+            <if test="sort != null and sort != '' and sort == 'no'">
+                and comment_count = 0
+            </if>
+            <if test="time != null and time != ''">
+                and gmt_create > #{time}
+            </if>
+        </where>
+    </select>
+
+    <select id="findByCondition" parameterType="plus.axz.community.dto.QuestionQueryDto" resultMap="BaseResultMap">
+        select * from question
+        <where>
+            <if test="creatorId != null">
+                and creator = #{creatorId}
+            </if>
+            <if test="search != null and search != ''">
+                and title regexp #{search}
+            </if>
+            <if test="tag != null and tag != ''">
+                and tags regexp #{tag}
+            </if>
+            <if test="sort != null and sort != '' and sort == 'no'">
+                and comment_count = 0
+            </if>
+            <if test="time != null and time != ''">
+                and gmt_create > #{time}
+            </if>
+            and status = 0
+            and is_deleted = 0
+        </where>
+
+        order by top desc,
+        <if test="sort != null and sort != '' and (sort == 'hot' || sort == 'hot7' || sort == 'hot30')">
+            (comment_count + view_count / 10) desc,
+        </if>
+        gmt_create desc
+        limit #{offerIndex}, #{pageSize}
+    </select>
+</mapper>

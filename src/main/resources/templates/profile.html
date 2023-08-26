@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title th:text="${sectionName}">程序员论坛</title>
+    <head th:replace="fragment/import::common"></head>
+</head>
+<body>
+<!--顶部导航栏-->
+<div th:replace="fragment/top_navigation::nav"></div>
+<div class="container-fluid main">
+    <div class="row">
+        <div class="page_left col-lg-9 col-md-9 col-sm-12 col-xs-12">
+            <h3>
+                <img th:if="${section=='questions'}" src="/icons/question-square-s.svg" class="nav-title-icon">
+                <img th:if="${section=='replies'}" src="/icons/bell-s.svg" class="nav-title-icon">
+                &nbsp;[[${sectionName}]]
+            </h3>
+            <span class="to-right">
+            <img src="/icons/check-circle-s.svg" class="user-oper-icon">
+            <a href="/notification/0" th:if="${section=='replies'}" class="a-no-line">一键已读</a>
+            </span>
+            <hr>
+            <!--问题列表-->
+            <div th:if="${section} == 'questions'">
+                <div th:replace="fragment/question_list::list(true)"></div>
+            </div>
+            <!--通知列表-->
+            <div th:if="${section} == 'replies'">
+                <div th:replace="fragment/reply_list::list"></div>
+            </div>
+            <!--分页栏-->
+            <div th:replace="fragment/page_navigation::nav"></div>
+        </div>
+        <div class="page_right col-lg-3 col-md-3 col-sm-12 col-xs-12">
+            <!--<h4>
+                <img src="/icons/book.svg" class="nav-title-icon">
+                每日一文
+            </h4>
+            <div class="panel panel-warning">
+                <div class="panel-heading article-tag">
+                    <span class="label label-success">
+                        <span class="glyphicon glyphicon-bookmark"></span>
+                        <span id="article-title"></span>
+                    </span>
+                    &nbsp;
+                    <span class="label label-warning">
+                        <span class="glyphicon glyphicon-user"></span>
+                        <span id="article-author"></span>
+                    </span>
+                </div>
+                <div class="panel-body">
+                    <p id="article-digest"></p>
+                    <a type="button" class="to-right" data-toggle="modal" data-target="#article-read-all" style="cursor:pointer;">
+                        阅读全文
+                    </a>
+                </div>
+            </div>-->
+            <h4>
+                <img src="/icons/books.svg" class="nav-title-icon">
+                今日诗词
+            </h4>
+            <!--<div class="panel panel-warning">-->
+            <div class="poetry-s">
+                <div class="panel-heading article-tag">
+                    <!--                    <span id="jinrishici-sentence">正在加载今日诗词....</span>-->
+                    <script src="https://sdk.jinrishici.com/v2/browser/jinrishici.js" charset="utf-8"></script>
+                    <script type="text/javascript">
+                        jinrishici.load(function (result) {
+                            var sentence = document.querySelector("#poem_sentence")
+                            var info = document.querySelector("#poem_info")
+                            sentence.innerHTML = result.data.content
+                            info.innerHTML = '【' + result.data.origin.dynasty + '】' + result.data.origin.author + '《' + result.data.origin.title + '》'
+                        });
+                    </script>
+                    <div id="poem_sentence"></div>
+                    <div id="poem_info"></div>
+                </div>
+            </div>
+            <hr>
+        </div>
+    </div>
+</div>
+<div>
+    <span class="glyphicon glyphicon-menu-up click-top-btn" id="returnTop"></span>
+</div>
+<!--每日模态框-->
+<div th:replace="fragment/article::article"></div>
+<!--顶部须知 模态框-->
+<div th:replace="fragment/notice::modal"></div>
+<!--聊天室-->
+<div th:replace="fragment/chatroom::chatroom"></div>
+<!--页尾-->
+<div th:replace="fragment/footer::beetle_footer"></div>
+</body>
+</html>
